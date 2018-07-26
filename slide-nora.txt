@@ -1,0 +1,24 @@
+[sp.slide-title{ lopdf }]
+[sp.event-title{ Rust LT #2 〜いま使う！Rust〜 }]
+section.page.first-page {
+h1: lopdfの話
+h2: 2018-08-01 Rust LT #2 〜いま使う！Rust〜
+h3: 小嶋智
+}
+
+# 自己紹介
+
+* プログラマ
+* RubyやC++を書きます
+* テキスト処理や電子出版の周辺を漂っています
+
+image.fig-20(img/profile.png, プロフィール画像): 
+
+#(t) Rust歴3ヶ月の
+
+#(t) 私はいかに心配するのをやめて
+
+#(t) Rustを使ったか
+
+# 背景
+

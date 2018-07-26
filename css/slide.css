@@ -1,0 +1,176 @@
+@page {
+  size: A4 landscape;
+}
+
+@page :first {
+  counter-reset: page -1;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: ToppanBunkyuMidashiGothicStdN-ExtraBold;
+}
+
+section {
+  font-size: 28pt;
+  font-family: ToppanBunkyuGothicPr6N-Regular;
+  margin: 0 1em;
+}
+.page {
+  page-break-after: always;
+}
+.pgroup {
+  margin: 0 1em;
+}
+figure {
+  margin: 1em auto;
+}
+.fig-65 {
+  width: 65%;
+}
+.fig-60 {
+  width: 60%;
+}
+.fig-50 {
+  width: 50%;
+}
+.fig-20 {
+  width: 20%;
+}
+.book {
+  height: 100mm;
+  width: auto;
+  margin: 0 0.5em;
+}
+.bookguide {
+  width: 45%;
+  float: right;
+}
+.bookguide p {
+  text-align: center;
+  font-size: 16pt;
+}
+figure.top-margin {
+  margin-top: 2em;
+}
+
+figcaption {
+  font-size: 12pt;
+  text-align: center;
+}
+img {
+  max-width: 100%;
+}
+
+.logo {
+  margin-top: 2em;
+  text-align: center;
+}
+.logo img {
+  height: 4em;
+  width: auto;
+  margin: 0 1em;
+}
+.license h1 {
+  display: none;
+}
+section.license {
+  padding-top: 70mm;
+}
+.cc {
+  font-size: 14pt;
+}
+.cc img {
+  height: 2em;
+  width: auto;
+}
+h1 {
+  font-size: 40pt;
+}
+h2 {
+  font-size: 32pt;
+}
+h3 {
+  font-size: 28pt;
+}
+.note {
+  font-size: 20pt;
+}
+.pgroup {
+}
+.first-page h1 {
+  font-size: 52pt;
+  text-align: center;
+  padding-top: 50mm;
+}
+section.t h1 {
+  font-size: 80pt;
+  text-align: center;
+  padding-top: 50mm;
+}
+section.t h2 {
+  text-align: center;
+}
+section.t p {
+  text-align: center;
+}
+
+.first-page h2, .first-page h3 {
+ text-align: center;
+ font-weight: normal;
+}
+
+@-epubx-page-template {
+  .event-title {
+    -epubx-flow-into: event-title;
+    -epubx-flow-options: exclusive last static;
+    font-size: 12pt; 
+  }
+  .event-title-area {
+    -epubx-flow-from: event-title;
+    bottom: 0;
+    left: 1em;
+    height: 2.5em;
+  }
+  .slide-title {
+    -epubx-flow-into: slide-title;
+    -epubx-flow-options: exclusive last static;
+    font-size: 12pt; 
+  }
+  .slide-title-area {
+    -epubx-flow-from: slide-title;
+    bottom: 0;
+    right: 1em;
+    height: 2.5em;
+  }
+ .page-number-area {
+    content: "- " counter(page) " -" ;
+    width: 20%;
+    left: 40%;
+    right: 40%;
+    bottom: 0;
+    height: 2.5em;
+    text-align: center;
+  }
+  @-epubx-page-master {
+    -epubx-page: 1;
+    @-epubx-partition body {
+      -epubx-flow-from: body;
+      width: 100%; 
+      padding: 0.5em 1em 1em 0;
+    }
+  }
+  @-epubx-page-master {
+    @-epubx-partition body {
+      -epubx-flow-from: body;
+      width: 100%; 
+      padding: 0.5em 1em 1em 0;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 3em;
+      border-bottom: 1px solid #000000;
+    }
+    @-epubx-partition page-number-area class(page-number-area) {}
+    @-epubx-partition event-title-area class(event-title-area) {}
+    @-epubx-partition slide-title-area class(slide-title-area) {}
+  }
+}
