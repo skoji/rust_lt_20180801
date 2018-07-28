@@ -23,40 +23,34 @@ image.fig-20(img/profile.png, プロフィール画像):
 
 #(t) 背景 
 
-##(p) 対象の製品
+##(t) 対象の製品
 
-* VersaType by Trimmarks
-** CSS組版
-** HTML + CSSをページ組版するJSのエンジン
-* VersaType Converter
+###(t) Trim-marks
+
+###(p) VersaType
+
+* HTML/CSSをページ組版するエンジン
+** JS製
+
+###(p) VersaType Converter
 ** HTML/CSSをPDFに変換
 ** jsエンジン + 組み込み用Chromium
 ** Win/Linux/macOSのバイナリ
 
 ##(p) なぜPDF処理(1) 
 
-* PDF生成は基本的にChromiumそのまま
-* 製品としてはPDF出力をもっと強くしたい
+* PDF生成はChromium任せ
+* PDF出力をもっと強くしたい
 * 後処理 vs Chromiumへのパッチ
 ** 向き不向きがある
 
 ##(p) なぜPDF処理(2) 
 
-* 後処理でできることは後処理で
-** Chromium本体へのパッチ
+* Chromiumへのパッチ vs 後処理
 ** 本家に取り込まれない場合は追従がしんどい
+* 後処理でできることは後処理で
 
-# PDF後処理の手段
-
-* PDF後処理が可能なPDFライブラリ
-** 意外に少ない
-* GhostScript : PSの世界に一回持ってくる
-* iText : Java
-* そのほか
-** C・C++が多い
-** 「生成」専用ライブラリが多い
-
-#(t) 要件
+#(t) PDF後処理: 要件
 
 ##(t) 組み込んで配布
 ##(t) PDF細かく触れる
@@ -71,6 +65,7 @@ p.center: (できれば)
 * PDFの低レイヤが触れる
 * Linux/Windows/macOSのx86_64
 * C++から呼べる
+* Rustで書ける
 
 #(t) 懸念
 section.page.no-h {
@@ -106,13 +101,13 @@ section.page.no-h {
 ##(t) C++から呼び出し
 section.page.no-h {
 * PDFしおり
-** ラベル、階層、ページ数
-** これの配列
+** ラベル、階層、ページ番号
+*** の配列
 }
 
 ###(t) 手段１
 section.page.no-h {
-* Vectorへのポインタを返すAPI
+* 新規Vectorへのポインタを返すAPI
 * Vectorとデータの組みを渡して、Vectorに追加していくAPI
 * VectorとPDFへのファイルパスを渡して、書き込むAPI
 }
