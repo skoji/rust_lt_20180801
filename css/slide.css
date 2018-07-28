@@ -12,10 +12,13 @@ h1,h2,h3,h4,h5,h6 {
 section {
   font-size: 28pt;
   font-family: ToppanBunkyuGothicPr6N-Regular;
-  margin: 0 1em;
+  margin: 1em;
 }
 .page {
-  page-break-after: always;
+  page-break-before: always;
+}
+.no-h {
+  padding-top: 60px;
 }
 .pgroup {
   margin: 0 1em;
@@ -59,7 +62,10 @@ figcaption {
 img {
   max-width: 100%;
 }
-
+hr.p {
+  display: none;
+  page-break-after: always;
+}
 .logo {
   margin-top: 2em;
   text-align: center;
@@ -86,31 +92,47 @@ h1 {
   font-size: 40pt;
 }
 h2 {
-  font-size: 32pt;
+  font-size: 40pt;
 }
 h3 {
-  font-size: 28pt;
+  font-size: 40pt;
 }
 .note {
   font-size: 20pt;
 }
+.center {
+  text-align: center;
+}
 .pgroup {
+}
+.first-page {
+  page-break-before: avoid;
 }
 .first-page h1 {
   font-size: 52pt;
   text-align: center;
   padding-top: 50mm;
 }
-section.t h1 {
+.first-page h2 {
+  font-size: 28pt;
+}
+.first-page h3 {
+  font-size: 32pt;
+}
+section.t > h1 {
   font-size: 80pt;
   text-align: center;
   padding-top: 50mm;
 }
-section.t h2 {
+section.t > h2 {
+  font-size: 80pt;
   text-align: center;
+  padding-top: 50mm;
 }
-section.t p {
+section.t > h3 {
+  font-size: 80pt;
   text-align: center;
+  padding-top: 50mm;
 }
 
 .first-page h2, .first-page h3 {

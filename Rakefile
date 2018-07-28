@@ -4,7 +4,7 @@ require 'nora_mark/rake_task'
 NoraMark::RakeTask.new(lang: 'ja') do
   |task|
   task.page_number_digits = 3;
-  task.title = 'Gitとはなにか'
+  task.title = 'lopdfの話'
   task.stylesheets = [ 'css/slide.css' ]
 end
 

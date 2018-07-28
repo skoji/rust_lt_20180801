@@ -1,4 +1,4 @@
-[sp.slide-title{ lopdf }]
+[sp.slide-title{ lopdfの話 }]
 [sp.event-title{ Rust LT #2 〜いま使う！Rust〜 }]
 section.page.first-page {
 h1: lopdfの話
@@ -11,14 +11,132 @@ h3: 小嶋智
 * プログラマ
 * RubyやC++を書きます
 * テキスト処理や電子出版の周辺を漂っています
+* Rust歴3ヶ月程度
 
 image.fig-20(img/profile.png, プロフィール画像): 
 
-#(t) Rust歴3ヶ月の
+#(t) 話す内容
 
-#(t) 私はいかに心配するのをやめて
+##(p)  lopdf
+* PDFライブラリ
+* 製品で使った話をします
 
-#(t) Rustを使ったか
+#(t) 背景 
 
-# 背景
+##(p) 対象の製品
+
+* VersaType by Trimmarks
+** CSS組版
+** HTML + CSSをページ組版するJSのエンジン
+* VersaType Converter
+** HTML/CSSをPDFに変換
+** jsエンジン + 組み込み用Chromium
+** Win/Linux/macOSのバイナリ
+
+##(p) なぜPDF処理(1) 
+
+* PDF生成は基本的にChromiumそのまま
+* 製品としてはPDF出力をもっと強くしたい
+* 後処理 vs Chromiumへのパッチ
+** 向き不向きがある
+
+##(p) なぜPDF処理(2) 
+
+* 後処理でできることは後処理で
+** Chromium本体へのパッチ
+** 本家に取り込まれない場合は追従がしんどい
+
+# PDF後処理の手段
+
+* PDF後処理が可能なPDFライブラリ
+** 意外に少ない
+* GhostScript : PSの世界に一回持ってくる
+* iText : Java
+* そのほか
+** C・C++が多い
+** 「生成」専用ライブラリが多い
+
+#(t) 要件
+
+##(t) 組み込んで配布
+##(t) PDF細かく触れる
+##(t) Win/Linux/macOS
+##(t) C++から呼びたい
+##(t) C++ 書きたくない
+p.center: (できれば)
+
+# lopdf
+
+* バイナリに組み込める。または簡単に一緒に配布できる
+* PDFの低レイヤが触れる
+* Linux/Windows/macOSのx86_64
+* C++から呼べる
+
+#(t) 懸念
+section.page.no-h {
+* PDF操作の機能が本当に足りているか
+* C++からの呼び出し
+** そこそこ複雑な構造を渡すインタフェース
+* ちゃんとRustのコードが書けるのか (私が）
+}
+
+#(t) 機能が足りているか
+section.page.no-h {
+* 結論から言うと、足りている。
+* ただし低レイヤなのでコード量は多い
+* 抽象度の高いRubyのPrawnとコードを比較してみる。
+}
+
+##(p) 機能比較(1)
+
+* Hello World
+
+###(p) Prawn
+
+###(p) lopdf
+
+##(p) 機能比較(2)
+
+* Outlines (PDFしおり)
+
+###(p) Prawn
+
+###(p) lopdf
+
+##(t) C++から呼び出し
+section.page.no-h {
+* PDFしおり
+** ラベル、階層、ページ数
+** これの配列
+}
+
+###(t) 手段１
+section.page.no-h {
+* Vectorへのポインタを返すAPI
+* Vectorとデータの組みを渡して、Vectorに追加していくAPI
+* VectorとPDFへのファイルパスを渡して、書き込むAPI
+}
+
+###(t) 手段1の実現
+section.page.no-h {
+* 元々はJSで、オブジェクトの配列
+* C++のデータ構造にまず変換
+* C++上でさらにRustで実装したAPIを呼びだす
+}
+
+###(t) だるい
+
+###(p) 手段1の欠点
+
+* C++コード上で構造を作る必要がある
+** 中間に入るC++のコードでは、本来構造を知らなくても良い
+
+###(t) 手段2
+section.page.no-h {
+* JSONを使う
+** JS側でJSON文字列に変換
+** C++ではその文字列をそのままRustで書いたAPIへ
+** Rust側ではJSONをパースしてVectorを作る
+}
+
 
