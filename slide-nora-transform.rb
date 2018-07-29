@@ -19,6 +19,10 @@ require 'rouge'
       lexer = Rouge::Lexers::Ruby.new
     when 'rust'
       lexer = Rouge::Lexers::Rust.new
+    when 'js'
+      lexer = Rouge::Lexers::Javascript.new
+    when 'c'
+      lexer = Rouge::Lexers::C.new
     else
       lexer = Rouge::Lexers::Shell.new
     end

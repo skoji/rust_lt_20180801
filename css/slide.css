@@ -17,6 +17,24 @@ section {
 pre {
   padding: 0.2em 0.5em;
 }
+code {
+  font-family: "Source Code Pro";
+  font-size: 22pt;
+}
+.small-small-code {
+  font-size: 6.5pt;
+  margin-top: -30px;
+}
+.small-small-code code {
+  font-size: 7pt
+}
+.medium-code {
+  font-size: 18pt;
+  margin-top: -30px;
+}
+.medium-code code {
+  font-size: 18pt
+}
 .page {
   page-break-before: always;
 }
@@ -63,14 +81,6 @@ figure {
   height: 100mm;
   width: auto;
   margin: 0 0.5em;
-}
-.small-small-code {
-  font-size: 7pt;
-  margin-top: -30px;
-}
-.small-code {
-  font-size: 10pt;
-  margin-top: -30px;
 }
 .bookguide {
   width: 45%;

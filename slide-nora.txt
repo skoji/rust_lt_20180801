@@ -59,10 +59,10 @@ image.fig-80(img/versatype.png, VersaType説明): [l(https://trim-marks.com/){ht
 #(t) PDF後処理: 要件
 
 ##(t) 組み込んで配布
-##(t) PDF細かく触れる
+##(t) PDFの低レイヤ
 ##(t) Win/Linux/macOS
 ##(t) C++から呼びたい
-##(t) C++ 書きたくない
+##(t) C++書きたくない
 p.center: (できれば)
 
 # lopdf
@@ -85,12 +85,14 @@ section.page.no-h {
 section.page.no-h {
 * 結論から言うと、足りている。
 * ただし低レイヤなのでコード量は多い
-* 抽象度の高いRubyのPrawnとコードを比較してみる。
+* RubyのPrawnと比較してみる
+** PDF生成専用
+** 簡単に書けるが低レイヤ操作は難しい
 }
 
-##(p) 機能比較(1)
+##(p) 機能比較: Hello World
 
-* Hello World
+image.fig-60(img/hello.png, hello world):
 
 ###(p) Prawn
 
@@ -167,17 +169,17 @@ Prawn::Document.generate('hello2.pdf') do
   end
 end
 ```
-##(p) 機能比較(2)
+##(p) 機能比較: Outlines
 
-* Outlines (PDFしおり)
+image.top-pad-fig.fig-60(img/bookmark-screenshot.png, bookmark):
 
 ###(p) Prawn
 
-section.small-code {
+section.medium-code {
 ```ruby
 require 'prawn'
 Prawn::Document.generate('outline.pdf') do
-  (1..10).each do |index|
+  (1..3).each do |index|
     text "Page #{index}"
     start_new_page
   end
@@ -189,31 +191,142 @@ Prawn::Document.generate('outline.pdf') do
     end
   end
 
-  outline.insert_section_after('Page 2') do
-    outline.section('Section after Page 2') do
-      outline.page title: 'Page 4', destination: 4
-    end
-  end
-
-  outline.insert_section_after('Section 1') do
-    outline.section('Section after Section 1') do
-      outline.page title: 'Page 5', destination: 5
-    end
-  end
-
-  outline.insert_section_after('Page 3') do
-    outline.page title: 'Page after Page 3', destination: 6
-  end
-end
 ```
 }
 ###(p) lopdf
+section.small-small-code {
+```rust
+fn outline() {
+    let mut doc = Document::with_version("1.5");
+    let pages_id = doc.new_object_id();
+    let font_id = doc.add_object(dictionary! {
+        "Type" => "Font",
+        "Subtype" => "Type1",
+        "BaseFont" => "Courier",
+    });
+    let resources_id = doc.add_object(dictionary! {
+        "Font" => dictionary! {
+            "F1" => font_id,
+        },
+    });
 
+    let mut pages_list: Vec<Object> = Vec::new();
+    
+    for x in 0..3 {
+        let str = format!("Page {}", x + 1);
+        let content = Content {
+            operations: vec![
+                Operation::new("BT", vec![]),
+                Operation::new("Tf", vec!["F1".into(), 48.into()]),
+                Operation::new("Td", vec![100.into(), 600.into()]),
+                Operation::new("Tj", vec![Object::string_literal(str)]),
+                Operation::new("ET", vec![]),
+            ],
+        };
+        let content_id = doc.add_object(Stream::new(dictionary! {}, content.encode().unwrap()));
+        let page_id = doc.add_object(dictionary! {
+            "Type" => "Page",
+            "Parent" => pages_id,
+            "Contents" => content_id,
+        });
+        pages_list.push(page_id.into());
+    }
+    let outline_id = {
+        let outline_id = doc.new_object_id();
+        let outline_first_id = doc.new_object_id();
+        let outline_second_id = doc.new_object_id();
+        let outline_third_id = doc.new_object_id();
+
+        
+        let action_first_id = doc.add_object(dictionary!{
+            "D" => vec![pages_list[0].clone(), "FitH".into(), Object::Null],
+            "S" => "GoTo"
+        });
+        let action_second_id = doc.add_object(dictionary!{
+            "D" => vec![pages_list[1].clone(), "FitH".into(), Object::Null],
+            "S" => "GoTo"
+        });
+        let action_third_id = doc.add_object(dictionary!{
+            "D" => vec![pages_list[2].clone(), "FitH".into(), Object::Null],
+            "S" => "GoTo"
+        });
+        
+        let outline_second = dictionary! {
+            "Title" => Object::string_literal("Page 2"),
+            "Parent" => outline_first_id,
+            "A" => action_second_id,
+            "Next" => outline_third_id
+        };
+        let outline_third = dictionary! {
+            "Title" => Object::string_literal("Page 3"),
+            "Parent" => outline_first_id,
+            "A" => action_third_id,
+            "Prev" => outline_second_id
+        };
+        let outline_first = dictionary! {
+            "Title" => Object::string_literal("Section 1"),
+            "Parent" => outline_id,
+            "A" => action_first_id,
+            "First" => outline_second_id,
+            "Last" => outline_third_id
+        };
+        let outline = dictionary! {
+            "Count" => 2,
+            "First" => outline_first_id,
+            "Last" => outline_first_id,
+        };
+        doc.objects.insert(outline_first_id, Object::Dictionary(outline_first));
+        doc.objects.insert(outline_second_id, Object::Dictionary(outline_second));
+        doc.objects.insert(outline_third_id, Object::Dictionary(outline_third));
+        doc.objects.insert(outline_id, Object::Dictionary(outline));
+        outline_id
+    };
+    let pages = dictionary! {
+        "Type" => "Pages",
+        "Kids" => pages_list,
+        "Count" => 3, 
+        "Resources" => resources_id,
+        "MediaBox" => vec![0.into(), 0.into(), 595.into(), 842.into()],
+    };
+    doc.objects.insert(pages_id, Object::Dictionary(pages));
+    let catalog_id = doc.add_object(dictionary! {
+        "Type" => "Catalog",
+        "Pages" => pages_id,
+        "Outlines" => outline_id
+    });
+    doc.trailer.set("Root", catalog_id);
+    doc.compress();
+    doc.save("outline.pdf").unwrap();
+}
+```
+}
+##(t) とはいえ
+
+###(p) lopdfは低レイヤを触れるので
+
+* PDFしおりをクリックした時のズームを制御する`FitH`を変更できる。
+* Prawnではこのパラメータは固定。
+
+```rust
+let action_first_id = doc.add_object(dictionary!{
+    "D" => vec![pages_list[0].clone(), 
+                "FitH".into(), 
+                Object::Null],
+    "S" => "GoTo"
+});
+```
 ##(t) C++から呼び出し
 section.page.no-h {
 * PDFしおり
 ** ラベル、階層、ページ番号
 *** の配列
+
+```js
+[{ title: '第１章', level: 1, page :1 },
+ { title: '第１章第１節', level: 2, page: 1 },
+ { title: '第１章第２節', level: 2, page: 9 },
+ { title: '第２章', level:1, page: 20 }]
+```
 }
 
 ###(t) 手段１
@@ -224,10 +337,25 @@ section.page.no-h {
 }
 
 ###(t) 手段1の実現
+
+###(p) インタフェース
+```c
+void *get_vector();
+bool add_outline_to_vector(const char *title,
+                           int_32t level,
+                           int_32t page,
+                           void *vector);
+bool add_outline(const char *src_path,
+                 const char *dst_path,
+                 void *vector);
+```
+
 section.page.no-h {
-* 元々はJSで、オブジェクトの配列
+* ただし、
+* 元データはJavaScript
+** オブジェクトの配列
 * C++のデータ構造にまず変換
-* C++上でさらにRustで実装したAPIを呼びだす
+* C++上でAPIを順次呼びだす
 }
 
 ###(t) だるい
@@ -235,16 +363,22 @@ section.page.no-h {
 ###(p) 手段1の欠点
 
 * C++コード上で構造を作る必要がある
-** 中間に入るC++のコードでは、本来構造を知らなくても良い
+** JSとRustの間に入るC++のコードでは、本来構造を知らなくても良い
 
 ###(t) 手段2
 section.page.no-h {
 * JSONを使う
 ** JS側でJSON文字列に変換
-** C++ではその文字列をそのままRustで書いたAPIへ
+** C++では文字列をそのままRustで書いたAPIへ
 ** Rust側ではJSONをパースしてVectorを作る
 }
 
+###(p) インタフェース
+```c
+bool add_outline(const char *src_path,
+                 const char *dst_path,
+                 const char *outline_json);
+```
 ##(t) 今回は手段2を採用
 
 #(t) デモ
