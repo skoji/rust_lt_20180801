@@ -9,9 +9,8 @@ p.author: 小嶋智
 # 自己紹介
 
 * プログラマ
-* RubyやC++を書きます
 * テキスト処理や電子出版の周辺を漂っています
-* Rust歴3ヶ月程度
+* Ruby/C++を書いてきました
 
 image.fig-20(img/profile.png, プロフィール画像): 
 
@@ -42,7 +41,6 @@ image.fig-80(img/versatype.png, VersaType説明): [l(https://trim-marks.com/){ht
 
 * HTML/CSSをPDFに変換
 * JSの組版エンジン + 組み込み用Chromium
-pdfの比較コード
 * Win/Linux/macOSのバイナリ
 
 ##(p) なぜPDF処理(1) 
@@ -54,7 +52,8 @@ pdfの比較コード
 
 ##(p) なぜPDF処理(2) 
 
-* Chromiumへのパッチ vs 後処理
+* Chromiumへのパッチ
+** Chromiumは大きい上に変化が激しい
 ** 本家に取り込まれない場合は追従がしんどい
 * 後処理でできることは後処理で
 
@@ -66,14 +65,14 @@ pdfの比較コード
 ##(t) C++から呼びたい
 ##(t) C++書きたくない
 p.center: (できれば)
-
+##(t) 探した結果
+#(t) lopdf！
 section.page {
-h1.invisible: lopdf
 
 image(img/lopdf.png, lopdf Github page):
 
-* バイナリに組み込める。または簡単に一緒に配布できる
-* PDFの低レイヤが触れる
+* バイナリに組み込める
+* PDFの低レイヤ操作ができる
 * Linux/Windows/macOSのx86_64
 * C++から呼べる
 * Rustで書ける
@@ -85,13 +84,12 @@ section.page.no-h {
 * C++からの呼び出し
 ** CSSのbookmarks指定をPDF Outlinesに反映
 ** そこそこ複雑な構造を渡すインタフェース
-* ちゃんとRustのコードが書けるのか (私が）
 }
 
 #(t) 機能が足りているか
 section.page.no-h {
 * 結論から言うと、足りている。
-* ただし低レイヤなのでコード量は多い
+* 低レイヤなのでコード量は多い
 * RubyのPrawnと比較してみる
 ** PDF生成専用
 ** 簡単に書けるが低レイヤ操作は難しい
@@ -306,12 +304,15 @@ fn outline() {
 }
 ```
 }
+##(t) なげえ
+
 ##(t) とはいえ
 
-###(p) lopdfは低レイヤを触れるので
+###(p) lopdfは低レイヤを触れる
 
-* PDFしおりをクリックした時のズームを制御する`FitH`を変更できる。
-* Prawnではこのパラメータは固定。
+* PDFしおりのアクションはなんでもあり。
+** Prawnでは固定。
+* コードの短さは優先度低い
 
 ```rust
 let action_first_id = doc.add_object(dictionary!{
@@ -322,10 +323,9 @@ let action_first_id = doc.add_object(dictionary!{
 });
 ```
 ##(t) C++から呼び出し
-section.page.no-h {
-* PDFしおり
-** ラベル、階層、ページ番号
-*** の配列
+###(p) Bookmarks / しおり
+* ラベル、階層、ページ番号
+** の配列
 
 ```js
 [{ title: '第１章', level: 1, page :1 },
@@ -333,18 +333,17 @@ section.page.no-h {
  { title: '第１章第２節', level: 2, page: 9 },
  { title: '第２章', level:1, page: 20 }]
 ```
-}
 
 ###(t) 手段１
 section.page.no-h {
-* 新規Vectorへのポインタを返すAPI
-* Vectorとデータの組みを渡して、Vectorに追加していくAPI
-* VectorとPDFへのファイルパスを渡して、書き込むAPI
+* 新規VectorをRust側で生成、ポインタを返す
+* Vectorとデータの組みをC++側からRustに渡して追加
+* VectorとPDFへのファイルパスをC++側からRustに渡す
 }
 
 ###(p) インタフェース
 ```c
-void *get_vector();
+void *new_vector();
 bool add_outline_to_vector(const char *title,
                            int_32t level,
                            int_32t page,
@@ -372,9 +371,10 @@ section.page.no-h {
 ###(t) 手段2
 section.page.no-h {
 * JSONを使う
-** JS側でJSON文字列に変換
+** JS側で`JSON.stringify()`
 ** C++では文字列をそのままRustで書いたAPIへ
 ** Rust側ではJSONをパースしてVectorを作る
+*** `serde-json`
 }
 
 ###(p) インタフェース
