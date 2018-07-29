@@ -61,6 +61,14 @@ figure {
   width: auto;
   margin: 0 0.5em;
 }
+.small-small-code {
+  font-size: 7pt;
+  margin-top: -30px;
+}
+.small-code {
+  font-size: 10pt;
+  margin-top: -30px;
+}
 .bookguide {
   width: 45%;
   float: right;

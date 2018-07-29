@@ -26,7 +26,6 @@ require 'rouge'
     html = formatter.format(lexer.lex(@node.content.join "\r\n"))
     text_node = text(html, raw_text: true)
     text_node.noescape = true
-    text_node
     new_node = block('pre', text_node)
     new_node.classes = ['highlight']
     new_node
