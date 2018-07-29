@@ -342,8 +342,6 @@ section.page.no-h {
 * VectorとPDFへのファイルパスを渡して、書き込むAPI
 }
 
-###(t) 手段1の実現
-
 ###(p) インタフェース
 ```c
 void *get_vector();
