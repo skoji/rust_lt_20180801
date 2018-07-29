@@ -129,12 +129,19 @@ section.license {
 }
 h1 {
   font-size: 40pt;
+  bookmark-level: 1;
+}
+.first-page h1 {
+  bookmark-level: 1;
+  bookmark-label: content(text) " 表紙"
 }
 h2 {
   font-size: 40pt;
+  bookmark-level: 2;
 }
 h3 {
   font-size: 40pt;
+  bookmark-level: 3;
 }
 .note {
   font-size: 20pt;
@@ -152,10 +159,14 @@ h3 {
   text-align: center;
   padding-top: 50mm;
 }
-.first-page h2 {
+.first-page .title {
+  text-align: center;
+  font-family: ToppanBunkyuMidashiGothicStdN-ExtraBold;
   font-size: 28pt;
 }
-.first-page h3 {
+.first-page .author {
+  text-align: center;
+  font-family: ToppanBunkyuMidashiGothicStdN-ExtraBold;
   font-size: 32pt;
 }
 section.t > h1 {

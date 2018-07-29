@@ -2,8 +2,8 @@
 [sp.event-title{ Rust LT #2 〜いま使う！Rust〜 }]
 section.page.first-page {
 h1: lopdfの話
-h2: 2018-08-01 Rust LT #2 〜いま使う！Rust〜
-h3: 小嶋智
+p.title: 2018-08-01 Rust LT #2 〜いま使う！Rust〜
+p.author: 小嶋智
 }
 
 # 自己紹介
@@ -379,7 +379,8 @@ bool add_outline(const char *src_path,
                  const char *dst_path,
                  const char *outline_json);
 ```
-##(t) 今回は手段2を採用
+
+###(t) 今回は手段2を採用
 
 #(t) デモ
 
