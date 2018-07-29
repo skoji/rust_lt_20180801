@@ -391,7 +391,7 @@ bool add_outline(const char *src_path,
 * lopdf
 ** [l(https://github.com/J-F-Liu/lopdf){https://github.com/J-F-Liu/lopdf}]
 * Prawn
-** [l(http://prawnpdf.org/){http://prawnpdf.orgPrawa/}]
+** [l(http://prawnpdf.org/){http://prawnpdf.org/}]
 * Prawnとlopdf比較のソース
 ** [l(https://github.com/skoji/compare-prawn-lopdf){https://github.com/skoji/compare-prawn-lopdf}]
 * このスライドのソース
