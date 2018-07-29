@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ja" xml:lang="ja">
+<head>
+<title>lopdfの話</title>
+<link rel="stylesheet" type="text/css" href="css/slide.css" />
+<link rel="stylesheet" type="text/css" href="css/rouge.css" />
+</head>
+<body><div class='pgroup'><p><span class='slide-title'>lopdfの話 </span></p>
+<p><span class='event-title'>Rust LT #2 〜いま使う！Rust〜 </span></p>
+</div>
+<section class='page first-page'><h1 id='heading_index_1'>lopdfの話</h1>
+<div class='pgroup'><p class='title'>2018-08-01 Rust LT #2 〜いま使う！Rust〜</p>
+<p class='author'>小嶋智</p>
+</div>
+</section>
+<section class='page'><h1 id='heading_index_2'>自己紹介</h1>
+<ul><li>プログラマ</li>
+<li>テキスト処理や電子出版の周辺を漂っています</li>
+<li>Ruby/C++を書いてきました</li>
+</ul>
+<figure class='fig-20'><img src='img/profile.png' alt='プロフィール画像' /></figure>
+</section>
+<section class='page t page'><h1 id='heading_index_3'>話す内容</h1>
+<section class='page'><h2 id='heading_index_4'>lopdf</h2>
+<ul><li>PDFライブラリ</li>
+<li>製品で使った話をします</li>
+</ul>
+</section>
+</section>
+<section class='page t page'><h1 id='heading_index_5'>背景</h1>
+<section class='t page'><h2 id='heading_index_6'>対象の製品</h2>
+<section class='page'><h3 id='heading_index_7' class='invisible'>VeraType by Trim-marks</h3>
+<figure class='fig-80'><img src='img/versatype.png' alt='VersaType説明' /><figcaption><a target='_blank' href='https://trim-marks.com/'>https://trim-marks.com/</a></figcaption></figure>
+</section>
+<section class='page'><h3 id='heading_index_8'>VersaType</h3>
+<ul><li>HTML/CSSをページ組版するエンジン<ul><li>原則としてCSS標準の範囲</li>
+<li>JavaScript</li>
+</ul>
+</li>
+</ul>
+</section>
+<section class='page'><h3 id='heading_index_9'>VersaType Converter</h3>
+<ul><li>HTML/CSSをPDFに変換</li>
+<li>JSの組版エンジン + 組み込み用Chromium</li>
+<li>Win/Linux/macOSのバイナリ</li>
+</ul>
+</section>
+</section>
+<section class='page'><h2 id='heading_index_10'>なぜPDF処理(1)</h2>
+<ul><li>PDF生成はChromium任せ</li>
+<li>PDF出力をもっと強くしたい</li>
+<li>後処理 vs Chromiumへのパッチ<ul><li>向き不向きがある</li>
+</ul>
+</li>
+</ul>
+</section>
+<section class='page'><h2 id='heading_index_11'>なぜPDF処理(2)</h2>
+<ul><li>Chromiumへのパッチ<ul><li>Chromiumは大きい上に変化が激しい</li>
+<li>本家に取り込まれない場合は追従がしんどい</li>
+</ul>
+</li>
+<li>後処理でできることは後処理で</li>
+</ul>
+</section>
+</section>
+<section class='page t page'><h1 id='heading_index_12'>PDF後処理: 要件</h1>
+<section class='t page'><h2 id='heading_index_13'>組み込んで配布</h2>
+</section>
+<section class='t page'><h2 id='heading_index_14'>PDFの低レイヤ</h2>
+</section>
+<section class='t page'><h2 id='heading_index_15'>Win/Linux/macOS</h2>
+</section>
+<section class='t page'><h2 id='heading_index_16'>C++から呼びたい</h2>
+</section>
+<section class='t page'><h2 id='heading_index_17'>C++書きたくない</h2>
+<div class='pgroup'><p class='center'>(できれば)</p>
+</div>
+</section>
+<section class='t page'><h2 id='heading_index_18'>探した結果</h2>
+</section>
+</section>
+<section class='page t page'><h1 id='heading_index_19'>lopdf！</h1>
+<section class='page'><figure class='img-wrap'><img src='img/lopdf.png' alt='lopdf Github page' /></figure>
+<ul><li>バイナリに組み込める</li>
+<li>PDFの低レイヤ操作ができる</li>
+<li>Linux/Windows/macOSのx86_64</li>
+<li>C++から呼べる</li>
+<li>Rustで書ける</li>
+</ul>
+</section>
+</section>
+<section class='page t page'><h1 id='heading_index_20'>懸念</h1>
+<section class='page no-h'><ul><li>PDF操作の機能が本当に足りているか</li>
+<li>C++からの呼び出し<ul><li>CSSのbookmarks指定をPDF Outlinesに反映</li>
+<li>そこそこ複雑な構造を渡すインタフェース</li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section class='page t page'><h1 id='heading_index_21'>機能が足りているか</h1>
+<section class='page no-h'><ul><li>結論から言うと、足りている。</li>
+<li>低レイヤなのでコード量は多い</li>
+<li>RubyのPrawnと比較してみる<ul><li>PDF生成専用</li>
+<li>簡単に書けるが低レイヤ操作は難しい</li>
+</ul>
+</li>
+</ul>
+</section>
+<section class='page'><h2 id='heading_index_22'>機能比較: Hello World</h2>
+<figure class='fig-80'><img src='img/hello.png' alt='hello world' /></figure>
+<section class='page'><h3 id='heading_index_23'>Prawn</h3>
+<pre class='highlight'><code><span class="nb">require</span> <span class="s1">'prawn'</span>
+
+<span class="no">Prawn</span><span class="o">::</span><span class="no">Document</span><span class="p">.</span><span class="nf">generate</span><span class="p">(</span><span class="s1">'hello.pdf'</span><span class="p">)</span> <span class="k">do</span>
+  <span class="n">text</span> <span class="s2">"Hello World!"</span>
+<span class="k">end</span></code>
+</pre>
+</section>
+<section class='page'><h3 id='heading_index_24'>Prawn : 位置とフォントを指定</h3>
+<pre class='highlight'><code><span class="nb">require</span> <span class="s1">'prawn'</span>
+
+<span class="no">Prawn</span><span class="o">::</span><span class="no">Document</span><span class="p">.</span><span class="nf">generate</span><span class="p">(</span><span class="s1">'hello2.pdf'</span><span class="p">)</span> <span class="k">do</span>
+  <span class="n">font</span><span class="p">(</span><span class="s2">"Courier"</span><span class="p">)</span> <span class="k">do</span>
+    <span class="n">font_size</span> <span class="mi">48</span>
+    <span class="n">draw_text</span> <span class="s2">"Hello World!"</span><span class="p">,</span> <span class="ss">:at</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mi">600</span><span class="p">]</span>
+  <span class="k">end</span>
+<span class="k">end</span></code>
+</pre>
+</section>
+<section class='page'><h3 id='heading_index_25'>lopdf</h3>
+<section class='small-small-code'><pre class='highlight'><code><span class="k">fn</span> <span class="nf">hello</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="k">mut</span> <span class="n">doc</span> <span class="o">=</span> <span class="nn">Document</span><span class="p">::</span><span class="nf">with_version</span><span class="p">(</span><span class="s">"1.5"</span><span class="p">);</span>
+    <span class="k">let</span> <span class="n">pages_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.new_object_id</span><span class="p">();</span>
+    <span class="k">let</span> <span class="n">font_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.add_object</span><span class="p">(</span><span class="nd">dictionary!</span> <span class="p">{</span>
+        <span class="s">"Type"</span> <span class="k">=&gt;</span> <span class="s">"Font"</span><span class="p">,</span>
+        <span class="s">"Subtype"</span> <span class="k">=&gt;</span> <span class="s">"Type1"</span><span class="p">,</span>
+        <span class="s">"BaseFont"</span> <span class="k">=&gt;</span> <span class="s">"Courier"</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="k">let</span> <span class="n">resources_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.add_object</span><span class="p">(</span><span class="nd">dictionary!</span> <span class="p">{</span>
+        <span class="s">"Font"</span> <span class="k">=&gt;</span> <span class="nd">dictionary!</span> <span class="p">{</span>
+            <span class="s">"F1"</span> <span class="k">=&gt;</span> <span class="n">font_id</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">});</span>
+    <span class="k">let</span> <span class="n">content</span> <span class="o">=</span> <span class="n">Content</span> <span class="p">{</span>
+        <span class="n">operations</span><span class="p">:</span> <span class="nd">vec!</span><span class="p">[</span>
+            <span class="nn">Operation</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="s">"BT"</span><span class="p">,</span> <span class="nd">vec!</span><span class="p">[]),</span>
+            <span class="nn">Operation</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="s">"Tf"</span><span class="p">,</span> <span class="nd">vec!</span><span class="p">[</span><span class="s">"F1"</span><span class="nf">.into</span><span class="p">(),</span> <span class="mi">48</span><span class="nf">.into</span><span class="p">()]),</span>
+            <span class="nn">Operation</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="s">"Td"</span><span class="p">,</span> <span class="nd">vec!</span><span class="p">[</span><span class="mi">100</span><span class="nf">.into</span><span class="p">(),</span> <span class="mi">600</span><span class="nf">.into</span><span class="p">()]),</span>
+            <span class="nn">Operation</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="s">"Tj"</span><span class="p">,</span> <span class="nd">vec!</span><span class="p">[</span><span class="nn">Object</span><span class="p">::</span><span class="nf">string_literal</span><span class="p">(</span><span class="s">"Hello World!"</span><span class="p">)]),</span>
+            <span class="nn">Operation</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="s">"ET"</span><span class="p">,</span> <span class="nd">vec!</span><span class="p">[]),</span>
+        <span class="p">],</span>
+    <span class="p">};</span>
+    <span class="k">let</span> <span class="n">content_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.add_object</span><span class="p">(</span><span class="nn">Stream</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="nd">dictionary!</span> <span class="p">{},</span> <span class="n">content</span><span class="nf">.encode</span><span class="p">()</span><span class="nf">.unwrap</span><span class="p">()));</span>
+    <span class="k">let</span> <span class="n">page_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.add_object</span><span class="p">(</span><span class="nd">dictionary!</span> <span class="p">{</span>
+        <span class="s">"Type"</span> <span class="k">=&gt;</span> <span class="s">"Page"</span><span class="p">,</span>
+        <span class="s">"Parent"</span> <span class="k">=&gt;</span> <span class="n">pages_id</span><span class="p">,</span>
+        <span class="s">"Contents"</span> <span class="k">=&gt;</span> <span class="n">content_id</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="k">let</span> <span class="n">pages</span> <span class="o">=</span> <span class="nd">dictionary!</span> <span class="p">{</span>
+        <span class="s">"Type"</span> <span class="k">=&gt;</span> <span class="s">"Pages"</span><span class="p">,</span>
+        <span class="s">"Kids"</span> <span class="k">=&gt;</span> <span class="nd">vec!</span><span class="p">[</span><span class="n">page_id</span><span class="nf">.into</span><span class="p">()],</span>
+        <span class="s">"Count"</span> <span class="k">=&gt;</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="s">"Resources"</span> <span class="k">=&gt;</span> <span class="n">resources_id</span><span class="p">,</span>
+        <span class="s">"MediaBox"</span> <span class="k">=&gt;</span> <span class="nd">vec!</span><span class="p">[</span><span class="mi">0</span><span class="nf">.into</span><span class="p">(),</span> <span class="mi">0</span><span class="nf">.into</span><span class="p">(),</span> <span class="mi">595</span><span class="nf">.into</span><span class="p">(),</span> <span class="mi">842</span><span class="nf">.into</span><span class="p">()],</span>
+    <span class="p">};</span>
+    <span class="n">doc</span><span class="py">.objects</span><span class="nf">.insert</span><span class="p">(</span><span class="n">pages_id</span><span class="p">,</span> <span class="nn">Object</span><span class="p">::</span><span class="nf">Dictionary</span><span class="p">(</span><span class="n">pages</span><span class="p">));</span>
+    <span class="k">let</span> <span class="n">catalog_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.add_object</span><span class="p">(</span><span class="nd">dictionary!</span> <span class="p">{</span>
+        <span class="s">"Type"</span> <span class="k">=&gt;</span> <span class="s">"Catalog"</span><span class="p">,</span>
+        <span class="s">"Pages"</span> <span class="k">=&gt;</span> <span class="n">pages_id</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="n">doc</span><span class="py">.trailer</span><span class="nf">.set</span><span class="p">(</span><span class="s">"Root"</span><span class="p">,</span> <span class="n">catalog_id</span><span class="p">);</span>
+    <span class="n">doc</span><span class="nf">.compress</span><span class="p">();</span>
+    <span class="n">doc</span><span class="nf">.save</span><span class="p">(</span><span class="s">"hello-lopdf.pdf"</span><span class="p">)</span><span class="nf">.unwrap</span><span class="p">();</span>
+<span class="p">}</span></code>
+</pre>
+</section>
+</section>
+</section>
+<section class='page'><h2 id='heading_index_26'>機能比較: Outlines</h2>
+<figure class='top-pad-fig fig-60'><img src='img/bookmark-screenshot.png' alt='bookmark' /></figure>
+<section class='page'><h3 id='heading_index_27'>Prawn</h3>
+<section class='medium-code'><pre class='highlight'><code><span class="nb">require</span> <span class="s1">'prawn'</span>
+<span class="no">Prawn</span><span class="o">::</span><span class="no">Document</span><span class="p">.</span><span class="nf">generate</span><span class="p">(</span><span class="s1">'outline.pdf'</span><span class="p">)</span> <span class="k">do</span>
+  <span class="p">(</span><span class="mi">1</span><span class="o">..</span><span class="mi">3</span><span class="p">).</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">index</span><span class="o">|</span>
+    <span class="n">text</span> <span class="s2">"Page </span><span class="si">#{</span><span class="n">index</span><span class="si">}</span><span class="s2">"</span>
+    <span class="n">start_new_page</span>
+  <span class="k">end</span>
+
+  <span class="n">outline</span><span class="p">.</span><span class="nf">define</span> <span class="k">do</span>
+    <span class="n">section</span><span class="p">(</span><span class="s1">'Section 1'</span><span class="p">,</span> <span class="ss">destination: </span><span class="mi">1</span><span class="p">)</span> <span class="k">do</span>
+      <span class="n">page</span> <span class="ss">title: </span><span class="s1">'Page 2'</span><span class="p">,</span> <span class="ss">destination: </span><span class="mi">2</span>
+      <span class="n">page</span> <span class="ss">title: </span><span class="s1">'Page 3'</span><span class="p">,</span> <span class="ss">destination: </span><span class="mi">3</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+</code>
+</pre>
+</section>
+</section>
+<section class='page'><h3 id='heading_index_28'>lopdf</h3>
+<section class='small-small-code'><pre class='highlight'><code><span class="k">fn</span> <span class="nf">outline</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="k">mut</span> <span class="n">doc</span> <span class="o">=</span> <span class="nn">Document</span><span class="p">::</span><span class="nf">with_version</span><span class="p">(</span><span class="s">"1.5"</span><span class="p">);</span>
+    <span class="k">let</span> <span class="n">pages_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.new_object_id</span><span class="p">();</span>
+    <span class="k">let</span> <span class="n">font_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.add_object</span><span class="p">(</span><span class="nd">dictionary!</span> <span class="p">{</span>
+        <span class="s">"Type"</span> <span class="k">=&gt;</span> <span class="s">"Font"</span><span class="p">,</span>
+        <span class="s">"Subtype"</span> <span class="k">=&gt;</span> <span class="s">"Type1"</span><span class="p">,</span>
+        <span class="s">"BaseFont"</span> <span class="k">=&gt;</span> <span class="s">"Courier"</span><span class="p">,</span>
+    <span class="p">});</span>
+    <span class="k">let</span> <span class="n">resources_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.add_object</span><span class="p">(</span><span class="nd">dictionary!</span> <span class="p">{</span>
+        <span class="s">"Font"</span> <span class="k">=&gt;</span> <span class="nd">dictionary!</span> <span class="p">{</span>
+            <span class="s">"F1"</span> <span class="k">=&gt;</span> <span class="n">font_id</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">});</span>
+
+    <span class="k">let</span> <span class="k">mut</span> <span class="n">pages_list</span><span class="p">:</span> <span class="nb">Vec</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">&gt;</span> <span class="o">=</span> <span class="nn">Vec</span><span class="p">::</span><span class="nf">new</span><span class="p">();</span>
+    
+    <span class="k">for</span> <span class="n">x</span> <span class="n">in</span> <span class="mi">0</span><span class="o">..</span><span class="mi">3</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nb">str</span> <span class="o">=</span> <span class="nd">format!</span><span class="p">(</span><span class="s">"Page {}"</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+        <span class="k">let</span> <span class="n">content</span> <span class="o">=</span> <span class="n">Content</span> <span class="p">{</span>
+            <span class="n">operations</span><span class="p">:</span> <span class="nd">vec!</span><span class="p">[</span>
+                <span class="nn">Operation</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="s">"BT"</span><span class="p">,</span> <span class="nd">vec!</span><span class="p">[]),</span>
+                <span class="nn">Operation</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="s">"Tf"</span><span class="p">,</span> <span class="nd">vec!</span><span class="p">[</span><span class="s">"F1"</span><span class="nf">.into</span><span class="p">(),</span> <span class="mi">48</span><span class="nf">.into</span><span class="p">()]),</span>
+                <span class="nn">Operation</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="s">"Td"</span><span class="p">,</span> <span class="nd">vec!</span><span class="p">[</span><span class="mi">100</span><span class="nf">.into</span><span class="p">(),</span> <span class="mi">600</span><span class="nf">.into</span><span class="p">()]),</span>
+                <span class="nn">Operation</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="s">"Tj"</span><span class="p">,</span> <span class="nd">vec!</span><span class="p">[</span><span class="nn">Object</span><span class="p">::</span><span class="nf">string_literal</span><span class="p">(</span><span class="nb">str</span><span class="p">)]),</span>
+                <span class="nn">Operation</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="s">"ET"</span><span class="p">,</span> <span class="nd">vec!</span><span class="p">[]),</span>
+            <span class="p">],</span>
+        <span class="p">};</span>
+        <span class="k">let</span> <span class="n">content_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.add_object</span><span class="p">(</span><span class="nn">Stream</span><span class="p">::</span><span class="nf">new</span><span class="p">(</span><span class="nd">dictionary!</span> <span class="p">{},</span> <span class="n">content</span><span class="nf">.encode</span><span class="p">()</span><span class="nf">.unwrap</span><span class="p">()));</span>
+        <span class="k">let</span> <span class="n">page_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.add_object</span><span class="p">(</span><span class="nd">dictionary!</span> <span class="p">{</span>
+            <span class="s">"Type"</span> <span class="k">=&gt;</span> <span class="s">"Page"</span><span class="p">,</span>
+            <span class="s">"Parent"</span> <span class="k">=&gt;</span> <span class="n">pages_id</span><span class="p">,</span>
+            <span class="s">"Contents"</span> <span class="k">=&gt;</span> <span class="n">content_id</span><span class="p">,</span>
+        <span class="p">});</span>
+        <span class="n">pages_list</span><span class="nf">.push</span><span class="p">(</span><span class="n">page_id</span><span class="nf">.into</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">let</span> <span class="n">outline_id</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="n">outline_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.new_object_id</span><span class="p">();</span>
+        <span class="k">let</span> <span class="n">outline_first_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.new_object_id</span><span class="p">();</span>
+        <span class="k">let</span> <span class="n">outline_second_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.new_object_id</span><span class="p">();</span>
+        <span class="k">let</span> <span class="n">outline_third_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.new_object_id</span><span class="p">();</span>
+
+        
+        <span class="k">let</span> <span class="n">action_first_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.add_object</span><span class="p">(</span><span class="nd">dictionary!</span><span class="p">{</span>
+            <span class="s">"D"</span> <span class="k">=&gt;</span> <span class="nd">vec!</span><span class="p">[</span><span class="n">pages_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="nf">.clone</span><span class="p">(),</span> <span class="s">"FitH"</span><span class="nf">.into</span><span class="p">(),</span> <span class="nn">Object</span><span class="p">::</span><span class="n">Null</span><span class="p">],</span>
+            <span class="s">"S"</span> <span class="k">=&gt;</span> <span class="s">"GoTo"</span>
+        <span class="p">});</span>
+        <span class="k">let</span> <span class="n">action_second_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.add_object</span><span class="p">(</span><span class="nd">dictionary!</span><span class="p">{</span>
+            <span class="s">"D"</span> <span class="k">=&gt;</span> <span class="nd">vec!</span><span class="p">[</span><span class="n">pages_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="nf">.clone</span><span class="p">(),</span> <span class="s">"FitH"</span><span class="nf">.into</span><span class="p">(),</span> <span class="nn">Object</span><span class="p">::</span><span class="n">Null</span><span class="p">],</span>
+            <span class="s">"S"</span> <span class="k">=&gt;</span> <span class="s">"GoTo"</span>
+        <span class="p">});</span>
+        <span class="k">let</span> <span class="n">action_third_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.add_object</span><span class="p">(</span><span class="nd">dictionary!</span><span class="p">{</span>
+            <span class="s">"D"</span> <span class="k">=&gt;</span> <span class="nd">vec!</span><span class="p">[</span><span class="n">pages_list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="nf">.clone</span><span class="p">(),</span> <span class="s">"FitH"</span><span class="nf">.into</span><span class="p">(),</span> <span class="nn">Object</span><span class="p">::</span><span class="n">Null</span><span class="p">],</span>
+            <span class="s">"S"</span> <span class="k">=&gt;</span> <span class="s">"GoTo"</span>
+        <span class="p">});</span>
+        
+        <span class="k">let</span> <span class="n">outline_second</span> <span class="o">=</span> <span class="nd">dictionary!</span> <span class="p">{</span>
+            <span class="s">"Title"</span> <span class="k">=&gt;</span> <span class="nn">Object</span><span class="p">::</span><span class="nf">string_literal</span><span class="p">(</span><span class="s">"Page 2"</span><span class="p">),</span>
+            <span class="s">"Parent"</span> <span class="k">=&gt;</span> <span class="n">outline_first_id</span><span class="p">,</span>
+            <span class="s">"A"</span> <span class="k">=&gt;</span> <span class="n">action_second_id</span><span class="p">,</span>
+            <span class="s">"Next"</span> <span class="k">=&gt;</span> <span class="n">outline_third_id</span>
+        <span class="p">};</span>
+        <span class="k">let</span> <span class="n">outline_third</span> <span class="o">=</span> <span class="nd">dictionary!</span> <span class="p">{</span>
+            <span class="s">"Title"</span> <span class="k">=&gt;</span> <span class="nn">Object</span><span class="p">::</span><span class="nf">string_literal</span><span class="p">(</span><span class="s">"Page 3"</span><span class="p">),</span>
+            <span class="s">"Parent"</span> <span class="k">=&gt;</span> <span class="n">outline_first_id</span><span class="p">,</span>
+            <span class="s">"A"</span> <span class="k">=&gt;</span> <span class="n">action_third_id</span><span class="p">,</span>
+            <span class="s">"Prev"</span> <span class="k">=&gt;</span> <span class="n">outline_second_id</span>
+        <span class="p">};</span>
+        <span class="k">let</span> <span class="n">outline_first</span> <span class="o">=</span> <span class="nd">dictionary!</span> <span class="p">{</span>
+            <span class="s">"Title"</span> <span class="k">=&gt;</span> <span class="nn">Object</span><span class="p">::</span><span class="nf">string_literal</span><span class="p">(</span><span class="s">"Section 1"</span><span class="p">),</span>
+            <span class="s">"Parent"</span> <span class="k">=&gt;</span> <span class="n">outline_id</span><span class="p">,</span>
+            <span class="s">"A"</span> <span class="k">=&gt;</span> <span class="n">action_first_id</span><span class="p">,</span>
+            <span class="s">"First"</span> <span class="k">=&gt;</span> <span class="n">outline_second_id</span><span class="p">,</span>
+            <span class="s">"Last"</span> <span class="k">=&gt;</span> <span class="n">outline_third_id</span>
+        <span class="p">};</span>
+        <span class="k">let</span> <span class="n">outline</span> <span class="o">=</span> <span class="nd">dictionary!</span> <span class="p">{</span>
+            <span class="s">"Count"</span> <span class="k">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s">"First"</span> <span class="k">=&gt;</span> <span class="n">outline_first_id</span><span class="p">,</span>
+            <span class="s">"Last"</span> <span class="k">=&gt;</span> <span class="n">outline_first_id</span><span class="p">,</span>
+        <span class="p">};</span>
+        <span class="n">doc</span><span class="py">.objects</span><span class="nf">.insert</span><span class="p">(</span><span class="n">outline_first_id</span><span class="p">,</span> <span class="nn">Object</span><span class="p">::</span><span class="nf">Dictionary</span><span class="p">(</span><span class="n">outline_first</span><span class="p">));</span>
+        <span class="n">doc</span><span class="py">.objects</span><span class="nf">.insert</span><span class="p">(</span><span class="n">outline_second_id</span><span class="p">,</span> <span class="nn">Object</span><span class="p">::</span><span class="nf">Dictionary</span><span class="p">(</span><span class="n">outline_second</span><span class="p">));</span>
+        <span class="n">doc</span><span class="py">.objects</span><span class="nf">.insert</span><span class="p">(</span><span class="n">outline_third_id</span><span class="p">,</span> <span class="nn">Object</span><span class="p">::</span><span class="nf">Dictionary</span><span class="p">(</span><span class="n">outline_third</span><span class="p">));</span>
+        <span class="n">doc</span><span class="py">.objects</span><span class="nf">.insert</span><span class="p">(</span><span class="n">outline_id</span><span class="p">,</span> <span class="nn">Object</span><span class="p">::</span><span class="nf">Dictionary</span><span class="p">(</span><span class="n">outline</span><span class="p">));</span>
+        <span class="n">outline_id</span>
+    <span class="p">};</span>
+    <span class="k">let</span> <span class="n">pages</span> <span class="o">=</span> <span class="nd">dictionary!</span> <span class="p">{</span>
+        <span class="s">"Type"</span> <span class="k">=&gt;</span> <span class="s">"Pages"</span><span class="p">,</span>
+        <span class="s">"Kids"</span> <span class="k">=&gt;</span> <span class="n">pages_list</span><span class="p">,</span>
+        <span class="s">"Count"</span> <span class="k">=&gt;</span> <span class="mi">3</span><span class="p">,</span> 
+        <span class="s">"Resources"</span> <span class="k">=&gt;</span> <span class="n">resources_id</span><span class="p">,</span>
+        <span class="s">"MediaBox"</span> <span class="k">=&gt;</span> <span class="nd">vec!</span><span class="p">[</span><span class="mi">0</span><span class="nf">.into</span><span class="p">(),</span> <span class="mi">0</span><span class="nf">.into</span><span class="p">(),</span> <span class="mi">595</span><span class="nf">.into</span><span class="p">(),</span> <span class="mi">842</span><span class="nf">.into</span><span class="p">()],</span>
+    <span class="p">};</span>
+    <span class="n">doc</span><span class="py">.objects</span><span class="nf">.insert</span><span class="p">(</span><span class="n">pages_id</span><span class="p">,</span> <span class="nn">Object</span><span class="p">::</span><span class="nf">Dictionary</span><span class="p">(</span><span class="n">pages</span><span class="p">));</span>
+    <span class="k">let</span> <span class="n">catalog_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.add_object</span><span class="p">(</span><span class="nd">dictionary!</span> <span class="p">{</span>
+        <span class="s">"Type"</span> <span class="k">=&gt;</span> <span class="s">"Catalog"</span><span class="p">,</span>
+        <span class="s">"Pages"</span> <span class="k">=&gt;</span> <span class="n">pages_id</span><span class="p">,</span>
+        <span class="s">"Outlines"</span> <span class="k">=&gt;</span> <span class="n">outline_id</span>
+    <span class="p">});</span>
+    <span class="n">doc</span><span class="py">.trailer</span><span class="nf">.set</span><span class="p">(</span><span class="s">"Root"</span><span class="p">,</span> <span class="n">catalog_id</span><span class="p">);</span>
+    <span class="n">doc</span><span class="nf">.compress</span><span class="p">();</span>
+    <span class="n">doc</span><span class="nf">.save</span><span class="p">(</span><span class="s">"outline.pdf"</span><span class="p">)</span><span class="nf">.unwrap</span><span class="p">();</span>
+<span class="p">}</span></code>
+</pre>
+</section>
+</section>
+</section>
+<section class='t page'><h2 id='heading_index_29'>なげえ</h2>
+</section>
+<section class='t page'><h2 id='heading_index_30'>とはいえ</h2>
+<section class='page'><h3 id='heading_index_31'>lopdfは低レイヤを触れる</h3>
+<ul><li>PDFしおりのアクションはなんでもあり。<ul><li>Prawnでは固定。</li>
+</ul>
+</li>
+<li>コードの短さは優先度低い</li>
+</ul>
+<pre class='highlight'><code><span class="k">let</span> <span class="n">action_first_id</span> <span class="o">=</span> <span class="n">doc</span><span class="nf">.add_object</span><span class="p">(</span><span class="nd">dictionary!</span><span class="p">{</span>
+    <span class="s">"D"</span> <span class="k">=&gt;</span> <span class="nd">vec!</span><span class="p">[</span><span class="n">pages_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="nf">.clone</span><span class="p">(),</span> 
+                <span class="s">"FitH"</span><span class="nf">.into</span><span class="p">(),</span> 
+                <span class="nn">Object</span><span class="p">::</span><span class="n">Null</span><span class="p">],</span>
+    <span class="s">"S"</span> <span class="k">=&gt;</span> <span class="s">"GoTo"</span>
+<span class="p">});</span></code>
+</pre>
+</section>
+</section>
+<section class='t page'><h2 id='heading_index_32'>C++から呼び出し</h2>
+<section class='page'><h3 id='heading_index_33'>Bookmarks / しおり</h3>
+<ul><li>ラベル、階層、ページ番号<ul><li>の配列</li>
+</ul>
+</li>
+</ul>
+<pre class='highlight'><code><span class="p">[{</span> <span class="na">title</span><span class="p">:</span> <span class="s1">'第１章'</span><span class="p">,</span> <span class="na">level</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="na">page</span> <span class="p">:</span><span class="mi">1</span> <span class="p">},</span>
+ <span class="p">{</span> <span class="na">title</span><span class="p">:</span> <span class="s1">'第１章第１節'</span><span class="p">,</span> <span class="na">level</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="na">page</span><span class="p">:</span> <span class="mi">1</span> <span class="p">},</span>
+ <span class="p">{</span> <span class="na">title</span><span class="p">:</span> <span class="s1">'第１章第２節'</span><span class="p">,</span> <span class="na">level</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="na">page</span><span class="p">:</span> <span class="mi">9</span> <span class="p">},</span>
+ <span class="p">{</span> <span class="na">title</span><span class="p">:</span> <span class="s1">'第２章'</span><span class="p">,</span> <span class="na">level</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="na">page</span><span class="p">:</span> <span class="mi">20</span> <span class="p">}]</span></code>
+</pre>
+</section>
+<section class='t page'><h3 id='heading_index_34'>手段１</h3>
+<section class='page no-h'><ul><li>Rustで空のvectorを生成</li>
+<li>C++からvectorにデータ追加</li>
+<li>出来上がったvectorでPDFを処理</li>
+</ul>
+</section>
+</section>
+<section class='page'><h3 id='heading_index_35'>インタフェース</h3>
+<pre class='highlight'><code><span class="kt">void</span> <span class="o">*</span><span class="n">new_vector</span><span class="p">();</span>
+<span class="n">bool</span> <span class="n">add_outline_to_vector</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">title</span><span class="p">,</span>
+                           <span class="n">int_32t</span> <span class="n">level</span><span class="p">,</span>
+                           <span class="n">int_32t</span> <span class="n">page</span><span class="p">,</span>
+                           <span class="kt">void</span> <span class="o">*</span><span class="n">vector</span><span class="p">);</span>
+<span class="n">bool</span> <span class="n">add_outline</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">src_path</span><span class="p">,</span>
+                 <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">dst_path</span><span class="p">,</span>
+                 <span class="kt">void</span> <span class="o">*</span><span class="n">vector</span><span class="p">);</span></code>
+</pre>
+</section>
+<section class='page'><h3 id='heading_index_36'>処理の流れ</h3>
+<ul><li>元データはJavaScript<ul><li>オブジェクトの配列</li>
+</ul>
+</li>
+<li>C++のデータ構造にまず変換</li>
+<li>C++上でAPIを順次呼びだす</li>
+</ul>
+</section>
+<section class='t page'><h3 id='heading_index_37'>だるい</h3>
+</section>
+<section class='page'><h3 id='heading_index_38'>手段1の欠点</h3>
+<ul><li>C++コード上で構造を作る必要がある<ul><li>JSとRustの間に入るC++のコードでは、本来構造を知らなくても良い</li>
+</ul>
+</li>
+</ul>
+</section>
+<section class='t page'><h3 id='heading_index_39'>手段2</h3>
+<section class='page no-h'><ul><li>JSONを使う<ul><li>JS側で<code>JSON.stringify()</code></li>
+<li>C++では文字列をそのままRustへ</li>
+<li>Rust側ではJSONをパースしてVectorを作る<ul><li><code>serde-json</code>を使う</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section class='page'><h3 id='heading_index_40'>インタフェース</h3>
+<pre class='highlight'><code><span class="n">bool</span> <span class="n">add_outline</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">src_path</span><span class="p">,</span>
+                 <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">dst_path</span><span class="p">,</span>
+                 <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">outline_json</span><span class="p">);</span></code>
+</pre>
+</section>
+<section class='t page'><h3 id='heading_index_41'>手段2を採用</h3>
+</section>
+</section>
+</section>
+<section class='page t page'><h1 id='heading_index_42'>デモ</h1>
+</section>
+<section class='page'><h1 id='heading_index_43'>リソース</h1>
+<ul><li>lopdf<ul><li><a target='_blank' href='https://github.com/J-F-Liu/lopdf'>https://github.com/J-F-Liu/lopdf</a></li>
+</ul>
+</li>
+<li>Prawn<ul><li><a target='_blank' href='http://prawnpdf.org/'>http://prawnpdf.orgPrawa/</a></li>
+</ul>
+</li>
+<li>Prawnとlopdf比較のソース<ul><li><a target='_blank' href='https://github.com/skoji/compare-prawn-lopdf'>https://github.com/skoji/compare-prawn-lopdf</a></li>
+</ul>
+</li>
+<li>このスライドのソース<ul><li><a target='_blank' href='https://github.com/skoji/rust_lt_20180801'>https://github.com/skoji/rust_lt_20180801</a></li>
+</ul>
+</li>
+<li>VersaType <ul><li><a target='_blank' href='https://trim-marks.com/'>https://trim-marks.com</a></li>
+</ul>
+</li>
+</ul>
+</section>
+</body>
+</html>

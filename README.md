@@ -8,16 +8,16 @@
 
 ## 内容
 
-slide-nora.txt
+[slide-nora.txt](slide-nora.txt)
 :   ソースファイル。[Noramark](https://github.com/skoji/noramark)。
 
-slide-nora-transformer.rb
+[slide-nora-transform.rb](slide-nora-transform.rb)
 :   Noramark用のマークアップカスタマイズ
 
-slide-nora_001.xhtml
+[slide-nora_001.xhtml](slide-nora_001.xhtml)
 :   変換後のHTML。（XHTMLになっているのは、NoramarkがEPUBをメインのターゲットにしていたのが理由）
 
-slide.pdf
+[slide.pdf](slide.pdf)
 :   VersaType Converterで変換したPDF
 
 ## ビルド・表示方法
