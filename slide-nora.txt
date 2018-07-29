@@ -94,6 +94,14 @@ section.page.no-h {
 
 ###(p) Prawn
 
+```ruby
+require 'prawn'
+
+Prawn::Document.generate('hello.pdf') do
+  text "Hello World!"
+end
+```
+
 ###(p) lopdf
 
 ##(p) 機能比較(2)

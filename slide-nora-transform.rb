@@ -1,3 +1,4 @@
+require 'rouge'
   modify({:type => :HeadedSection}) do
     @node.classes ||= []
     @node.classes << 'page' if @node.level == 1
@@ -9,4 +10,24 @@
   end
   modify 'l' do
     @node.add_attr 'target' => ['_blank']
+  end
+  replace ({type: :PreformattedBlock}) do
+    return @node if @node.name != 'code'
+
+    case @node.codelanguage
+    when 'ruby'
+      lexer = Rouge::Lexers::Ruby.new
+    when 'rust'
+      lexer = Rouge::Lexers::Rust.new
+    else
+      lexer = Rouge::Lexers::Shell.new
+    end
+    formatter = Rouge::Formatters::HTML.new
+    html = formatter.format(lexer.lex(@node.content.join "\r\n"))
+    text_node = text(html, raw_text: true)
+    text_node.noescape = true
+    text_node
+    new_node = block('pre', text_node)
+    new_node.classes = ['highlight']
+    new_node
   end
