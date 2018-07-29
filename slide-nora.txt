@@ -35,12 +35,14 @@ image.fig-80(img/versatype.png, VersaType説明): [l(https://trim-marks.com/){ht
 ###(p) VersaType
 
 * HTML/CSSをページ組版するエンジン
-** JS製
+** 原則としてCSS標準の範囲
+** JavaScript
 
 ###(p) VersaType Converter
 
 * HTML/CSSをPDFに変換
-* jsエンジン + 組み込み用Chromium
+* JSの組版エンジン + 組み込み用Chromium
+pdfの比較コード
 * Win/Linux/macOSのバイナリ
 
 ##(p) なぜPDF処理(1) 
@@ -65,18 +67,23 @@ image.fig-80(img/versatype.png, VersaType説明): [l(https://trim-marks.com/){ht
 ##(t) C++書きたくない
 p.center: (できれば)
 
-# lopdf
+section.page {
+h1.invisible: lopdf
+
+image(img/lopdf.png, lopdf Github page):
 
 * バイナリに組み込める。または簡単に一緒に配布できる
 * PDFの低レイヤが触れる
 * Linux/Windows/macOSのx86_64
 * C++から呼べる
 * Rustで書ける
+}
 
 #(t) 懸念
 section.page.no-h {
 * PDF操作の機能が本当に足りているか
 * C++からの呼び出し
+** CSSのbookmarks指定をPDF Outlinesに反映
 ** そこそこ複雑な構造を渡すインタフェース
 * ちゃんとRustのコードが書けるのか (私が）
 }
@@ -92,7 +99,7 @@ section.page.no-h {
 
 ##(p) 機能比較: Hello World
 
-image.fig-60(img/hello.png, hello world):
+image.fig-80(img/hello.png, hello world):
 
 ###(p) Prawn
 
@@ -101,6 +108,19 @@ require 'prawn'
 
 Prawn::Document.generate('hello.pdf') do
   text "Hello World!"
+end
+```
+
+###(p) Prawn : 位置とフォントを指定
+
+```ruby
+require 'prawn'
+
+Prawn::Document.generate('hello2.pdf') do
+  font("Courier") do
+    font_size 48
+    draw_text "Hello World!", :at => [100,600]
+  end
 end
 ```
 
@@ -155,20 +175,6 @@ fn hello() {
 ```
 }
 
-###(t) 位置やフォント
-
-###(p) Prawn : 位置とフォントを指定
-
-```ruby
-require 'prawn'
-
-Prawn::Document.generate('hello2.pdf') do
-  font("Courier") do
-    font_size 48
-    draw_text "Hello World!", :at => [100,600]
-  end
-end
-```
 ##(p) 機能比較: Outlines
 
 image.top-pad-fig.fig-60(img/bookmark-screenshot.png, bookmark):
@@ -380,8 +386,19 @@ bool add_outline(const char *src_path,
                  const char *outline_json);
 ```
 
-###(t) 今回は手段2を採用
+###(t) 手段2を採用
 
 #(t) デモ
 
+# リソース
 
+* lopdf
+** [l(https://github.com/J-F-Liu/lopdf){https://github.com/J-F-Liu/lopdf}]
+* Prawn
+** [l(http://prawnpdf.org/){http://prawnpdf.orgPrawa/}]
+* Prawnとlopdf比較のソース
+** [l(https://github.com/skoji/compare-prawn-lopdf){https://github.com/skoji/compare-prawn-lopdf}]
+* このスライドのソース
+** [l(https://github.com/skoji/rust_lt_20180801){https://github.com/skoji/rust_lt_20180801}]
+* VersaType 
+** [l(https://trim-marks.com/){https://trim-marks.com}]
