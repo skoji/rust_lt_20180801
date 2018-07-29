@@ -25,7 +25,12 @@ image.fig-20(img/profile.png, プロフィール画像):
 
 ##(t) 対象の製品
 
-###(t) Trim-marks
+section.page {
+h3.invisible: VeraType by Trim-marks
+
+image.fig-80(img/versatype.png, VersaType説明): [l(https://trim-marks.com/){https://trim-marks.com/}]
+
+}
 
 ###(p) VersaType
 
@@ -33,9 +38,10 @@ image.fig-20(img/profile.png, プロフィール画像):
 ** JS製
 
 ###(p) VersaType Converter
-** HTML/CSSをPDFに変換
-** jsエンジン + 組み込み用Chromium
-** Win/Linux/macOSのバイナリ
+
+* HTML/CSSをPDFに変換
+* jsエンジン + 組み込み用Chromium
+* Win/Linux/macOSのバイナリ
 
 ##(p) なぜPDF処理(1) 
 
@@ -133,5 +139,9 @@ section.page.no-h {
 ** C++ではその文字列をそのままRustで書いたAPIへ
 ** Rust側ではJSONをパースしてVectorを作る
 }
+
+##(t) 今回は手段2を採用
+
+#(t) デモ
 
 

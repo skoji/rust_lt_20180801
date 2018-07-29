@@ -20,6 +20,10 @@ section {
 .no-h {
   padding-top: 60px;
 }
+.center-image-section {
+  page-break-before: always;
+  padding-top
+}
 .pgroup {
   margin: 0 1em;
 }
@@ -37,6 +41,20 @@ figure {
 }
 .fig-20 {
   width: 20%;
+}
+.fig-80 {
+  width: 80%;
+}
+
+.fig-left-60 {
+  width: 60%;
+  margin: 2em 1em 1em 0.5em;
+}
+.top-pad-fig {
+  padding-top: 2em;
+}
+.invisible {
+  display: none;
 }
 .book {
   height: 100mm;
@@ -135,6 +153,9 @@ section.t > h3 {
   padding-top: 50mm;
 }
 
+.vcenter-figure {
+  padding-top: 60mm;
+}
 .first-page h2, .first-page h3 {
  text-align: center;
  font-weight: normal;
