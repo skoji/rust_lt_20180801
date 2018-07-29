@@ -336,9 +336,9 @@ let action_first_id = doc.add_object(dictionary!{
 
 ###(t) 手段１
 section.page.no-h {
-* 新規VectorをRust側で生成、ポインタを返す
-* Vectorとデータの組みをC++側からRustに渡して追加
-* VectorとPDFへのファイルパスをC++側からRustに渡す
+* Rustで空のvectorを生成
+* C++からvectorにデータ追加
+* 出来上がったvectorでPDFを処理
 }
 
 ###(p) インタフェース
@@ -353,13 +353,11 @@ bool add_outline(const char *src_path,
                  void *vector);
 ```
 
-section.page.no-h {
-* ただし、
+###(p) 処理の流れ
 * 元データはJavaScript
 ** オブジェクトの配列
 * C++のデータ構造にまず変換
 * C++上でAPIを順次呼びだす
-}
 
 ###(t) だるい
 
@@ -372,9 +370,9 @@ section.page.no-h {
 section.page.no-h {
 * JSONを使う
 ** JS側で`JSON.stringify()`
-** C++では文字列をそのままRustで書いたAPIへ
+** C++では文字列をそのままRustへ
 ** Rust側ではJSONをパースしてVectorを作る
-*** `serde-json`
+*** `serde-json`を使う
 }
 
 ###(p) インタフェース
