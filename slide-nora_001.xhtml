@@ -334,10 +334,10 @@
  <span class="p">{</span> <span class="na">title</span><span class="p">:</span> <span class="s1">'第２章'</span><span class="p">,</span> <span class="na">level</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="na">page</span><span class="p">:</span> <span class="mi">20</span> <span class="p">}]</span></code>
 </pre>
 </section>
-<section class='t page'><h3 id='heading_index_34'>手段１</h3>
-<section class='page no-h'><ul><li>Rustで空のvectorを生成</li>
-<li>C++からvectorにデータ追加</li>
-<li>出来上がったvectorでPDFを処理</li>
+<section class='t page'><h3 id='heading_index_34'>最初の案</h3>
+<section class='page no-h'><ul><li>Rust側で空のvectorを生成</li>
+<li>C++からtitle, level, pageの組をvectorにひとつずつ追加</li>
+<li>C++からPDFのパスを渡してしおり書き込み処理</li>
 </ul>
 </section>
 </section>
@@ -347,50 +347,46 @@
                            <span class="n">int_32t</span> <span class="n">level</span><span class="p">,</span>
                            <span class="n">int_32t</span> <span class="n">page</span><span class="p">,</span>
                            <span class="kt">void</span> <span class="o">*</span><span class="n">vector</span><span class="p">);</span>
-<span class="n">bool</span> <span class="n">add_outline</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">src_path</span><span class="p">,</span>
+<span class="n">bool</span> <span class="n">write_outline</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">src_path</span><span class="p">,</span>
                  <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">dst_path</span><span class="p">,</span>
                  <span class="kt">void</span> <span class="o">*</span><span class="n">vector</span><span class="p">);</span></code>
 </pre>
 </section>
 <section class='page'><h3 id='heading_index_36'>処理の流れ</h3>
-<ul><li>元データはJavaScript<ul><li>オブジェクトの配列</li>
+<ul><li>スタート地点ではJavaScript<ul><li>オブジェクトの配列</li>
 </ul>
 </li>
 <li>C++のデータ構造にまず変換</li>
-<li>C++上でAPIを順次呼びだす</li>
+<li>Rustから出ているAPIを順次呼ぶ</li>
 </ul>
 </section>
-<section class='t page'><h3 id='heading_index_37'>だるい</h3>
-</section>
-<section class='page'><h3 id='heading_index_38'>手段1の欠点</h3>
-<ul><li>C++コード上で構造を作る必要がある<ul><li>JSとRustの間に入るC++のコードでは、本来構造を知らなくても良い</li>
+<section class='page'><h3 id='heading_index_37'>欠点</h3>
+<ul><li>C++コード上で目次の構造を作る必要がある<ul><li>JSとRustの間に入るC++のコードでは、本来知らなくても良い知識</li>
 </ul>
 </li>
 </ul>
 </section>
-<section class='t page'><h3 id='heading_index_39'>手段2</h3>
-<section class='page no-h'><ul><li>JSONを使う<ul><li>JS側で<code>JSON.stringify()</code></li>
-<li>C++では文字列をそのままRustへ</li>
-<li>Rust側ではJSONをパースしてVectorを作る<ul><li><code>serde-json</code>を使う</li>
-</ul>
-</li>
+<section class='t page'><h3 id='heading_index_38'>2つ目の案</h3>
+<section class='page no-h'><ul><li>JS側で<code>JSON.stringify()</code></li>
+<li>C++では文字列の中身に関知しない</li>
+<li>Rust側ではパースしてVectorを作る<ul><li><code>serde-json</code></li>
 </ul>
 </li>
 </ul>
 </section>
 </section>
-<section class='page'><h3 id='heading_index_40'>インタフェース</h3>
+<section class='page'><h3 id='heading_index_39'>インタフェース</h3>
 <pre class='highlight'><code><span class="n">bool</span> <span class="n">add_outline</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">src_path</span><span class="p">,</span>
                  <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">dst_path</span><span class="p">,</span>
                  <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">outline_json</span><span class="p">);</span></code>
 </pre>
 </section>
-<section class='t page'><h3 id='heading_index_41'>手段2を採用</h3>
+<section class='t page'><h3 id='heading_index_40'>今回はこれを採用</h3>
 </section>
 </section>
 </section>
-<section class='page t page'><h1 id='heading_index_42'>デモ</h1>
-<section class='page'><h2 id='heading_index_43'>cssの指定</h2>
+<section class='page t page'><h1 id='heading_index_41'>デモ</h1>
+<section class='page'><h2 id='heading_index_42'>cssの指定</h2>
 <pre class='highlight'><code><span class="nt">h1</span> <span class="p">{</span>
   <span class="nl">bookmark-level</span><span class="p">:</span> <span class="m">1</span><span class="p">;</span>
 <span class="p">}</span>
@@ -406,7 +402,7 @@
 </pre>
 </section>
 </section>
-<section class='page'><h1 id='heading_index_44'>リソース</h1>
+<section class='page'><h1 id='heading_index_43'>リソース</h1>
 <ul><li>lopdf<ul><li><a target='_blank' href='https://github.com/J-F-Liu/lopdf'>https://github.com/J-F-Liu/lopdf</a></li>
 </ul>
 </li>

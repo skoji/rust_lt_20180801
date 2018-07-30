@@ -334,11 +334,11 @@ let action_first_id = doc.add_object(dictionary!{
  { title: '第２章', level:1, page: 20 }]
 ```
 
-###(t) 手段１
+###(t) 最初の案
 section.page.no-h {
-* Rustで空のvectorを生成
-* C++からvectorにデータ追加
-* 出来上がったvectorでPDFを処理
+* Rust側で空のvectorを生成
+* C++からtitle, level, pageの組をvectorにひとつずつ追加
+* C++からPDFのパスを渡してしおり書き込み処理
 }
 
 ###(p) インタフェース
@@ -348,31 +348,28 @@ bool add_outline_to_vector(const char *title,
                            int_32t level,
                            int_32t page,
                            void *vector);
-bool add_outline(const char *src_path,
+bool write_outline(const char *src_path,
                  const char *dst_path,
                  void *vector);
 ```
 
 ###(p) 処理の流れ
-* 元データはJavaScript
+* スタート地点ではJavaScript
 ** オブジェクトの配列
 * C++のデータ構造にまず変換
-* C++上でAPIを順次呼びだす
+* Rustから出ているAPIを順次呼ぶ
 
-###(t) だるい
+###(p) 欠点
 
-###(p) 手段1の欠点
+* C++コード上で目次の構造を作る必要がある
+** JSとRustの間に入るC++のコードでは、本来知らなくても良い知識
 
-* C++コード上で構造を作る必要がある
-** JSとRustの間に入るC++のコードでは、本来構造を知らなくても良い
-
-###(t) 手段2
+###(t) 2つ目の案
 section.page.no-h {
-* JSONを使う
-** JS側で`JSON.stringify()`
-** C++では文字列をそのままRustへ
-** Rust側ではJSONをパースしてVectorを作る
-*** `serde-json`を使う
+* JS側で`JSON.stringify()`
+* C++では文字列の中身に関知しない
+* Rust側ではパースしてVectorを作る
+** `serde-json`
 }
 
 ###(p) インタフェース
@@ -382,7 +379,7 @@ bool add_outline(const char *src_path,
                  const char *outline_json);
 ```
 
-###(t) 手段2を採用
+###(t) 今回はこれを採用
 
 #(t) デモ
 ##(p) cssの指定
