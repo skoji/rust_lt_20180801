@@ -90,21 +90,21 @@ h3 {
 .center {
   text-align: center;
 }
-.first-page {
+.cover-page {
   page-break-before: avoid;
 }
-.first-page h1 {
-  bookmark-level: none;
+.cover-page h1 {
+  bookmark-label: content(text) " 表紙";
   font-size: 52pt;
   text-align: center;
   padding-top: 50mm;
 }
-.first-page .title {
+.cover-page .title {
   text-align: center;
   font-family: ToppanBunkyuMidashiGothicStdN-ExtraBold;
   font-size: 28pt;
 }
-.first-page .author {
+.cover-page .author {
   text-align: center;
   font-family: ToppanBunkyuMidashiGothicStdN-ExtraBold;
   font-size: 32pt;

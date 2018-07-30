@@ -23,6 +23,8 @@ replace ({type: :PreformattedBlock}) do
     lexer = Rouge::Lexers::Javascript.new
   when 'c'
     lexer = Rouge::Lexers::C.new
+  when 'css'
+    lexer = Rouge::Lexers::CSS.new
   else
     lexer = Rouge::Lexers::Shell.new
   end

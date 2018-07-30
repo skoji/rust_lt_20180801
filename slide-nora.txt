@@ -1,6 +1,6 @@
 [sp.slide-title{ lopdfの話 }]
 [sp.event-title{ Rust LT #2 〜いま使う！Rust〜 }]
-section.page.first-page {
+section.page.cover-page {
 h1: lopdfの話
 p.title: 2018-08-01 Rust LT #2 〜いま使う！Rust〜
 p.author: 小嶋智
@@ -385,6 +385,22 @@ bool add_outline(const char *src_path,
 ###(t) 手段2を採用
 
 #(t) デモ
+##(p) cssの指定
+
+```css
+h1 {
+  bookmark-level: 1;
+}
+h2 {
+  bookmark-level: 2;
+}
+h3 {
+  bookmark-level: 3;
+}
+.cover-page h1 {
+  bookmark-label: content(text) " 表紙";
+}
+```
 
 # リソース
 
