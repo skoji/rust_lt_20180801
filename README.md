@@ -24,7 +24,10 @@
 
 ### ビルド
 
+ruby 2.3以上が必要です。macOSで動作確認しています。
+
 ```
+gem install bundler
 bundle install
 rake
 ```
@@ -42,7 +45,7 @@ ruby webserver.rb # 0.0.0.0:8000でWebサーバ起動
 sh open-chrome.sh
 ```
 
-### PDF生成（要VersaType Converter）
+### PDF生成（要VersaType Converter 2018.7）
 
 ```
 versatype-converter --with-bookmarks http://0.0.0.0:8000/slide-nora_001.xhtml --output=slide.pdf
