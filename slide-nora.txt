@@ -8,9 +8,9 @@ p.author: 小嶋智
 
 # 自己紹介
 
+* skoji
 * プログラマ
 * テキスト処理や電子出版の周辺を漂っています
-* Ruby/C++を書いてきました
 
 image.fig-20(img/profile.png, プロフィール画像): 
 
@@ -62,9 +62,9 @@ image.fig-80(img/versatype.png, VersaType説明): [l(https://trim-marks.com/){ht
 ##(t) 組み込んで配布
 ##(t) PDFの低レイヤ
 ##(t) Win/Linux/macOS
-##(t) C++から呼びたい
+##(t) C++から使う
 ##(t) C++書きたくない
-p.center: (できれば)
+p.center: (できるだけ)
 ##(t) 探した結果
 #(t) lopdf！
 section.page {
@@ -354,10 +354,12 @@ bool write_outline(const char *src_path,
 ```
 
 ###(p) 処理の流れ
-* スタート地点ではJavaScript
+* JavaScriptでしおり情報作成
 ** オブジェクトの配列
-* C++のデータ構造にまず変換
+* C++のデータ構造に変換
 * Rustから出ているAPIを順次呼ぶ
+
+###(t) だるい
 
 ###(p) 欠点
 
@@ -383,7 +385,7 @@ bool add_outline(const char *src_path,
 
 #(t) デモ
 ##(p) cssの指定
-
+section.medium-code {
 ```css
 h1 {
   bookmark-level: 1;
@@ -398,6 +400,8 @@ h3 {
   bookmark-label: content(text) " 表紙";
 }
 ```
+}
+この資料のPDFしおりはこの指定で生成した。
 
 # リソース
 
