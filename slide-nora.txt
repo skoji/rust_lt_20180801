@@ -10,6 +10,7 @@ p.author: 小嶋智
 
 * skoji
 * プログラマ
+* 主にRuby
 * テキスト処理や電子出版の周辺を漂っています
 
 image.fig-20(img/profile.png, プロフィール画像): 
