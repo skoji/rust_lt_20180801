@@ -324,7 +324,7 @@ let action_first_id = doc.add_object(dictionary!{
 });
 ```
 ##(t) C++から呼び出し
-###(p) Bookmarksの
+###(p) Bookmarksのデータ
 * ラベル、階層、ページ番号
 ** の配列
 
