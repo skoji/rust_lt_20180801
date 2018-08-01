@@ -310,7 +310,7 @@ fn outline() {
 
 ###(p) lopdfは低レイヤを触れる
 
-* PDFしおりのアクションはなんでもあり。
+* PDF outlinesのアクションはなんでもあり。
 ** Prawnでは固定。
 * コードの短さは優先度低い
 
@@ -323,7 +323,7 @@ let action_first_id = doc.add_object(dictionary!{
 });
 ```
 ##(t) C++から呼び出し
-###(p) Bookmarks / しおり
+###(p) Bookmarksの
 * ラベル、階層、ページ番号
 ** の配列
 
@@ -338,7 +338,7 @@ let action_first_id = doc.add_object(dictionary!{
 section.page.no-h {
 * Rust側で空のvectorを生成
 * C++からtitle, level, pageの組をvectorにひとつずつ追加
-* C++からPDFのパスを渡してしおり書き込み処理
+* C++からPDFのパスを渡してoutlines書き込み処理
 }
 
 ###(p) インタフェース
@@ -354,7 +354,7 @@ bool write_outline(const char *src_path,
 ```
 
 ###(p) 処理の流れ
-* JavaScriptでしおり情報作成
+* JavaScriptでbookmarks情報作成
 ** オブジェクトの配列
 * C++のデータ構造に変換
 * Rustから出ているAPIを順次呼ぶ
@@ -401,7 +401,7 @@ h3 {
 }
 ```
 }
-この資料のPDFしおりはこの指定で生成した。
+この資料のPDF outlinesはこの指定で生成した。
 
 # リソース
 
